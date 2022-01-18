@@ -1,0 +1,6 @@
+packages:
+  - vim
+  - neofetch
+  - htop
+  - tmux
+  - speedtest-cli

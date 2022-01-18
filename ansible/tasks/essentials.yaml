@@ -1,0 +1,39 @@
+# vars_prompt:
+#   name: 'server'
+#   prompt: "Is this execution targeting a production server?"
+#   default: no
+
+- name: Update Packages
+  dnf:
+    name: "*"
+    state: latest
+
+- name: Install Essential Packages
+  package:
+    name: "{{ packages }}"
+    state: latest
+# - name: Update Packages (Debian Based)
+#   apt:
+#     update_cache: yes
+#     upgrade: yes
+#   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+# - name: Disable SSH Password Auth
+#   lineinfile:
+#     dest: /etc/ssh/sshd_config
+#     regexp: "^#PasswordAuthentication yes"
+#     line: "PasswordAuthentication no"
+#   register: sshd_config
+
+# - name: Enable Passwordless Sudo For "{{ username }}"
+#   lineinfile:
+#     dest: /etc/sudoers
+#     regexp: "^%wheel"
+#     line: "{{ username }} ALL=(ALL) NOPASSWD: ALL"
+#     validate: "/usr/sbin/visudo -cf %s"
+
+# - name: Restart SSH Daemon
+#   service:
+#     name: sshd_config
+#     state: restarted
+#   when: sshd_config.changed
