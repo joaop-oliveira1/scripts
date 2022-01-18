@@ -1,7 +1,4 @@
 #! /bin/sh
 
-main() {
-  ./save_zshrc.sh
-}
-
-main
+touch /home/joaop.oliveira/Projects/Personal/Scripts/test.txt
+  # ./save_zshrc.sh
