@@ -10,7 +10,8 @@ copy_zsh_rc() {
 
 
 save_zshrc_in_repo() {
-  git add . && git commit -m "Commiting from zshrc cron job" && git push
+  git add .;
+  git commit -m "Commiting from zshrc cron job" && git push
 }
 
 main() {
