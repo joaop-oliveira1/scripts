@@ -1,0 +1,33 @@
+---
+- hosts: all
+  become: yes
+
+  vars_prompt:
+    - name: update
+      prompt: Do you want to update the machine? - default(yes)
+      private: no
+      default: yes
+    - name: ssh_routines
+      prompt: Do you want to configure your ssh connections? - default(no)
+      private: no
+      default: no
+    - name: clone_marketplaces
+      prompt: Do you want to clone/update specbooks marketplaces projects? - default(no)
+      private: no
+      default: no
+
+  tasks:
+    - name: "Excuting Essentials Commands"
+      import_tasks: tasks/essentials.yaml
+      when: update|bool
+
+    - name: "Executing SSH keys routines"
+      import_tasks: tasks/configure_git.yaml
+      when: ssh_routines|bool
+
+    - name: Marketplace Routines
+      import_tasks: tasks/marketplaces/winsupply.yaml
+      when: clone_marketplaces|bool
+
+    # - name: "Executing Backups Routines"
+    #   import_tasks: tasks/backup.yaml

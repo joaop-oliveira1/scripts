@@ -1,0 +1,33 @@
+- name: Disable SSH Password Auth
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^#PasswordAuthentication yes"
+    line: "PasswordAuthentication no"
+  register: sshd_config
+
+- name: Allow SSH Agent Forwarding
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^#AllowAgentForwarding yes"
+    line: "AllowAgentForwarding yes"
+  register: sshd_config
+
+- name: Forward SSH Agent
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^#ForwardAgent no"
+    line: "ForwardAgent yes"
+  register: sshd_config
+
+- name: Enable Passwordless Sudo
+  lineinfile:
+    dest: /etc/sudoers
+    regexp: "^%wheel"
+    line: "joaop-oliveira ALL=(ALL) NOPASSWD: ALL"
+    validate: "/usr/sbin/visudo -cf %s"
+
+- name: Restart SSH Daemon
+  service:
+    name: sshd_config
+    state: restarted
+  when: sshd_config.changed

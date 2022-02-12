@@ -1,0 +1,2 @@
+[notebook]
+joaop-oliveira ansible_host=192.168.0.15 ansible_user=joaop-oliveira ansible_connection=ssh

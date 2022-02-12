@@ -1,0 +1,36 @@
+- name: Checking Winsupply on Local Machine
+  stat:
+    path: "/home/joaop-oliveira/Projects/Specbooks/Marketplace/winsupply"
+  register: winsupply_dir
+
+- name: Update Winsupply Marketplace Website
+  ansible.builtin.git:
+    repo: "git@gitlab.com:specbooks/marketplace/winsupply.git"
+    dest: "/home/joaop-oliveira/Projects/Specbooks/Marketplace/winsupply"
+    clone: no
+    update: yes
+  when: winsupply_dir.stat.exists
+
+- name: Cloning Winsupply Marketplace Website
+  ansible.builtin.git:
+    repo: "https://{{ gitlab_user | urlencode }}:{{ gitlab_password | urlencode }}@gitlab.com/specbooks/marketplace/winsupply.git"
+    dest: "/home/joaop-oliveira/Projects/Specbooks/Marketplace/winsupply"
+    clone: yes
+    update: no
+    key_file: /home/joaop-oliveira/.ssh/gitlab
+  when: not winsupply_dir.stat.exists
+
+- name: Fix Winsupply marketplace permissions
+  file: "path={{ marketplace_dir }}/winsupply owner=joaop-oliveira group=joaop-oliveira mode=0775 state=directory recurse=yes"
+
+- name: Set Repo Remote URL To SSH
+  command: "chdir={{ marketplace_dir }}/winsupply git remote set-url origin git@gitlab.com:specbooks/marketplace/winsupply.git"
+  when: not winsupply_dir.stat.exists
+
+- name: Updating Components Version For Winsupply
+  npm:
+    name: "sb-components"
+    path: "/home/joaop-oliveira/Projects/Specbooks/Marketplace/winsupply"
+    version: "latest"
+    state: present
+  when: winsupply_dir.stat.exists

@@ -1,0 +1,11 @@
+- name: "Backup zshrc file in Drobox"
+  ansible.builtin.cron:
+    name: "Copying zshrc file to destination"
+    minute: "*/59"
+    job: "cp -r /home/joaop-oliveira/.zshrc /home/joaop-oliveira/Dropbox/Projects/Configurations"
+
+- name: "Backup nvim configuration directory in Drobox"
+  ansible.builtin.cron:
+    name: "Copying nvim config dir to destination"
+    minute: "*/59"
+    job: "cp -r /home/joaop-oliveira/.config/nvim /home/joaop-oliveira/Dropbox/Projects/Configurations"

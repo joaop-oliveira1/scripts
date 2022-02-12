@@ -1,0 +1,54 @@
+- name: Check If SSH Key Is Already Present
+  stat:
+    path: "{{ key_path }}"
+  register: key_stat_result
+
+- name: Generate SSH Key For GitLab Access
+  command: "ssh-keygen -t rsa -b 4096 -f {{ key_path }} -N ''"
+  when: not key_stat_result.stat.exists
+
+- name: Get key Content
+  command: "cat {{ key_path }}/gitlab"
+  register: key_content
+
+- name: Check If known_hosts exists
+  stat:
+    path: "{{ known_hosts_path }}"
+  register: known_hosts_stat
+
+- name: Create known_hosts if it does not exists
+  file:
+    path: "{{ known_hosts_path  }}"
+    state: touch
+  when: not known_hosts_stat.stat.exists
+
+- name: Get the content of known known_hosts
+  shell: "cat {{ known_hosts_stat }} | grep gitlab.com"
+  register: host_stat
+  failed_when: host_stat.rc > 1
+# - name: Modify known host
+#   block:
+#     - name: Fetch GitLab public key
+#       command: ssh-keyscan -T 10 gitlab.com
+#       register: keyscan
+#     - name: Add GitLab public key to ssh known_hosts
+#       lineinfile:
+#         path: "{{ known_hosts_path }}"
+#         create: yes
+#         line: "{{ item }}"
+#       with_items: "{{ keyscan.stdout_lines }}"
+#   when: host_stat.rc == 1
+# - name: Add SSH public key to GitLab Account
+#   uri:
+#     url: "https://www.gitlab.com/api/v4/users/{{ gitlab_user_id }}/keys"
+#     validate_certs: no
+#     method: POST
+#     body:
+#       title: ansible_key
+#       key: "{{ key_content.stdout }}"
+#     body_format: json
+#     headers:
+#       Content-Type: "application/json"
+#       PRIVATE-TOKEN: "{{ gitlab_token }}"
+#     register: task_log
+#     failed_when: task_log.content.find('key is already in use') == 0

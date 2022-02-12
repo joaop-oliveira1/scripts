@@ -1,0 +1,20 @@
+packages:
+  - vim
+  - neovim
+  - httpie
+  - neofetch
+  - htop
+  - tmux
+  - speedtest-cli
+  - cronie
+  - php
+  - php-mysqlnd
+  - php-pdo
+  - php-xml
+  - php-pecl-mcrypt
+  - php-mbstring
+  - php-gd
+  - php-opcache
+  - php-common
+  - php-pgsql
+  - php-pdo_pgsql
